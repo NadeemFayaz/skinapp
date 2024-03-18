@@ -1,0 +1,12 @@
+export const GMAIL = require('./gmail.png');
+export const LINKEDIN = require('./linkedin.png');
+export const PLUS = require('./plus.png');
+export const CAMERA = require('./camera.png');
+export const IMAGE = require('./image.png');
+export const CROSS = require('./cross.png');
+export const NADEEM= require('./team/nadeem.jpg');
+export const PAVAN= require('./team/pavan.jpg');
+export const BANU= require('./team/banu.jpg');
+export const ABHISHEK=require('./team/abhishek.jpg');
+export const HOME = require('./home.png');
+export const INFO = require('./info.png');
