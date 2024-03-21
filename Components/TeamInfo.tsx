@@ -21,11 +21,11 @@ export interface TeamInfo {
     linkedin: string;
 }
 
-const TeamInfo = ({teamInfo}: {teamInfo: TeamInfo[]}) => {
+export const sendEmail = (email: string) => {
+  Linking.openURL(`mailto:${email}`)
+}
 
-  const sendEmail = (email: string) => {
-    Linking.openURL(`mailto:${email}`)
-  }
+const TeamInfo = ({teamInfo}: {teamInfo: TeamInfo[]}) => {
 
   const openLinkedin = (linkedin: string) => {
     Linking.openURL(linkedin)

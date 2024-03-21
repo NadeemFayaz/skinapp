@@ -9,37 +9,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { launchCamera, launchImageLibrary, MediaType } from 'react-native-image-picker';
 import { FAB, PaperProvider, Portal } from 'react-native-paper';
 import { NADEEM, HOME, INFO, PAVAN, BANU, ABHISHEK } from './assets';
-
-
-
-
-const diseaseData = [
-  {
-    id: 1,
-    name: 'COVID-19',
-    description: 'Coronavirus disease (COVID-19) is an infectious disease caused by the SARS-CoV-2 virus.',
-    image: 'https://picsum.photos/700',
-  },
-  {
-    id: 2,
-    name: 'Malaria',
-    description: 'Malaria is a life-threatening disease caused by parasites that are transmitted to people through the internet.',
-    image: 'https://picsum.photos/700',
-  },
-  {
-    id: 3,
-    name: 'Tuberculosis',
-    description: 'Tuberculosis (TB) is caused by a bacterium called Mycobacterium tuberculosis. The bacteria usually attack the lungs, but TB bacteria can attack any part of the body such as the kidney, spine, and brain.',
-    image: 'https://picsum.photos/700',
-  },
-  {
-    id: 4,
-    name: 'HIV/AIDS',
-    description: 'HIV (human immunodeficiency virus) is a virus that attacks cells that help the body fight infection, making a person more vulnerable to other infections and diseases. It is spread by contact with certain bodily fluids of a person with HIV, most commonly during  unprotected',
-    image: 'https://picsum.photos/700',
-  }
-];
-
+import { Output } from './Components/Final';
+import Final from './Components/Final';
+import Doctor from './Components/Doctor';
+import { Disease } from './Components/Card';
 const teamDetails: TeamInfoInterface[] = [
   {
     id: 1,
@@ -67,7 +40,7 @@ const teamDetails: TeamInfoInterface[] = [
   },
   {
     id: 4,
-    name: 'Abhishk G',
+    name: 'Abhishek G',
     usn: '1AM20CS006',
     image:ABHISHEK,
     email: 'abhishekabu0155@gmail.com',
@@ -75,8 +48,9 @@ const teamDetails: TeamInfoInterface[] = [
   }
 ];
 
+import axios from 'axios';
 
-import type {PropsWithChildren} from 'react';
+import {useState, type PropsWithChildren} from 'react';
 import {
   Image,
   SafeAreaView,
@@ -86,6 +60,7 @@ import {
   Text,
   useColorScheme,
   View,
+  ActivityIndicator
 } from 'react-native';
 
 import {
@@ -95,7 +70,6 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
 function HomeScreen() {
   const options = {
     mediaType: 'photo' as MediaType,
@@ -103,24 +77,50 @@ function HomeScreen() {
     maxHeight: 200,
     maxWidth: 200,
 };
+
 const [state, setState] = React.useState({ open: false });
+const [isLoading, setIsLoading] = React.useState(true); // New state variable
 
-  const onStateChange = ({ open }: { open : boolean}) => setState({ open });
+const onStateChange = ({ open }: { open : boolean}) => setState({ open });
+const [diseaseData, setDiseaseData] = useState<Disease[]>([]);  
 
-  const { open } = state;
-  return (
-    <Camera>
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ScrollView>
-        {diseaseData.map(function (disease) {
-          return (
-            <DiseaseCard key={disease.id} disease={disease} />
-          );
-        })}
-      </ScrollView>
-    </View>
-    </Camera>
-  );
+React.useEffect(() => {    
+  if(diseaseData.length !== 0) {
+    return;
+  }
+  const getDiseaseData = () => {
+    setIsLoading(true); // Set loading to true before request
+    axios.get('https://legal-rat-terminally.ngrok-free.app/diseases')
+    .then((response) => {
+      const res = response.data;
+      const data = res.Diseases;
+      setDiseaseData(data);
+      setIsLoading(false); // Set loading to false after successful request
+    })
+    .catch((error) => {
+      console.log(error);
+      setIsLoading(false); // Set loading to false even if request fails
+    });
+  }
+  getDiseaseData();
+}, [diseaseData]);
+
+const { open } = state;
+return (
+  <Camera>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <ScrollView>
+      {isLoading ? ( // Use isLoading to conditionally render
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        diseaseData.map((disease) => (
+          <DiseaseCard disease={disease} key={disease.id} />
+        ))
+      )}
+    </ScrollView>
+  </View>
+  </Camera>
+);
 }
 
 
@@ -134,6 +134,7 @@ function InfoScreen() {
 }
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -144,8 +145,8 @@ function App(): React.JSX.Element {
 
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-          <Tab.Screen name="Home" component={HomeScreen} 
+      <Tab.Navigator screenOptions={{ headerShown: false }}>
+          <Tab.Screen name="Main" component={StackNavigator} 
             options={
               {
                 tabBarIcon: () => (
@@ -165,6 +166,16 @@ function App(): React.JSX.Element {
           />
       </Tab.Navigator>
     </NavigationContainer>
+  );
+}
+
+function StackNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Doctor" component={Doctor} />
+      <Stack.Screen name="Disease Info" component={Final} />
+    </Stack.Navigator>
   );
 }
 
