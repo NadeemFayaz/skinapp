@@ -16,6 +16,7 @@
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-firebase/app": "^19.1.1",
+    "@react-native-google-signin/google-signin": "^10.1.2",
     "@react-navigation/bottom-tabs": "^6.5.19",
     "@react-navigation/native": "^6.1.16",
     "@react-navigation/stack": "^6.3.28",

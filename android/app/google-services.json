@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "481372623389",
+    "project_id": "skindiseaseapp-be052",
+    "storage_bucket": "skindiseaseapp-be052.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481372623389:android:133c457c4aeed527d1ecf4",
+        "android_client_info": {
+          "package_name": "com.nadeem.skinapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa_OX7owy68ib-JVS4Z6g2O2iK20iudCs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

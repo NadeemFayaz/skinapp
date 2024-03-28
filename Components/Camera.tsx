@@ -18,7 +18,7 @@ interface CameraProps {
 const Camera = ({ children }: CameraProps) => {
     const navigation = useNavigation();
     const [visible, setVisible] = React.useState(false);
-    const [selectedImage, setSelectedImage] = React.useState();
+    const [selectedImage, setSelectedImage] = React.useState<any>(null);
     const [isLoading, setIsLoading] = React.useState(false);
     const processImage = (image: any, type: string) => {
         setIsLoading(true);
