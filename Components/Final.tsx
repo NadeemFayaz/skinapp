@@ -27,8 +27,11 @@ function Final ({ route, navigation }: { route: any, navigation: any }) {
         <View style={styles.container}>
             <Card style={styles.fullScreen}>
                 <View style={styles.content}>
-                    <Text style={styles.text}>Disease: {predicted_class_name}</Text>
-                    <Text style={styles.text}>Confidence: {`${confidence_score.toFixed(2)}%`}</Text>
+                    <Text style={styles.text}>Disease: {predicted_class_name || 'Unknown'}</Text>
+                    <Text style={styles.text}>Confidence: {confidence_score 
+                        ? `${(confidence_score * 100).toFixed(2)}%`
+                        : 'Unknown'
+                    }</Text>     
                     <Image
                         source={{ uri: base64Image }}
                         

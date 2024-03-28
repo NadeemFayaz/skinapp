@@ -10,6 +10,7 @@ import { launchCamera, launchImageLibrary, MediaType } from 'react-native-image-
 import { FAB, PaperProvider, Portal } from 'react-native-paper';
 import { NADEEM, HOME, INFO, PAVAN, BANU, ABHISHEK } from './assets';
 import { Output } from './Components/Final';
+import Auth from './Pages/auth';
 import Final from './Components/Final';
 import Doctor from './Components/Doctor';
 import { Disease } from './Components/Card';
@@ -98,7 +99,6 @@ React.useEffect(() => {
       setIsLoading(false); // Set loading to false after successful request
     })
     .catch((error) => {
-      console.log(error);
       setIsLoading(false); // Set loading to false even if request fails
     });
   }
@@ -108,8 +108,11 @@ React.useEffect(() => {
 const { open } = state;
 return (
   <Camera>
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>      
     <ScrollView>
+      <View style={{ width: '100%', height: 100, backgroundColor: 'violet', justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: 'black', fontSize: 20, justifyContent: 'center', textAlign: 'center' }}>Please use the plus icon at the bottom right corner to upload the image for diagonosis</Text>
+      </View>
       {isLoading ? ( // Use isLoading to conditionally render
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
@@ -138,6 +141,13 @@ const Stack = createStackNavigator();
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+
+  // check if the user is authenticated
+  const isAuthenticated = false;
+
+  if (!isAuthenticated) {
+    return <Auth navigation={null} />;
+  }
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
