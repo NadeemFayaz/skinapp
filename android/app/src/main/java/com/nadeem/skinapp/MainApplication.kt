@@ -1,4 +1,4 @@
-package com.test
+package com.nadeem.skinapp
 
 import android.app.Application
 import com.facebook.react.PackageList

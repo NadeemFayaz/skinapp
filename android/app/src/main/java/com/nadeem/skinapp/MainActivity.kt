@@ -1,4 +1,4 @@
-package com.test
+package com.nadeem.skinapp
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
