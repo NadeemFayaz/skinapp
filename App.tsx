@@ -7,7 +7,7 @@ import TeamInfo, { TeamInfo as TeamInfoInterface } from './Components/TeamInfo';
 import { createStackNavigator } from '@react-navigation/stack';
 import { launchCamera, launchImageLibrary, MediaType } from 'react-native-image-picker';
 import { FAB, PaperProvider, Portal } from 'react-native-paper';
-import { NADEEM, HOME, INFO, PAVAN, BANU, ABHISHEK, CAMERA } from './assets';
+import { NADEEM, HOME, INFO, PAVAN, BANU, ABHISHEK, CAMERA, HISTORY,BLOG} from './assets';
 import { Output } from './Components/Final';
 import Auth from './Pages/auth';
 import Final from './Components/Final';
@@ -307,6 +307,25 @@ function App(): React.JSX.Element {
                     }}
                   />
                   <Tab.Screen
+                    name="blog"
+                    component={DummyComponent}
+                    options={{
+                      tabBarIcon: ({ focused }) => (
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                          <Image
+                            source={BLOG}
+                            resizeMode='contain'
+                            style={{
+                              width: 25,
+                              height: 25,
+                              tintColor: focused ? '#e32f45' : '#748c94',
+                            }}
+                          />
+                        </View>
+                      ),
+                    }}
+                  />
+                  <Tab.Screen
                     name="Camera"
                     component={DummyComponent}
                     options={{
@@ -361,7 +380,7 @@ function App(): React.JSX.Element {
                       tabBarIcon: ({ focused }) => (
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                           <Image
-                            source={INFO}
+                            source={HISTORY}
                             resizeMode='contain'
                             style={{
                               width: 25,

@@ -12,3 +12,5 @@ export const BANU= require('./team/banu.jpg');
 export const ABHISHEK=require('./team/abhishek.jpg');
 export const HOME = require('./home.png');
 export const INFO = require('./info.png');
+export const HISTORY = require('./history.png');
+export const BLOG = require('./blog.png');
