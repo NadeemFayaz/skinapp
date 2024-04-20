@@ -8,7 +8,7 @@ const Background = require('../assets/background.jpg'); // replace with your ima
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
-const HomeScreen = ({navigation, setIsAuthenticated, setEmail}: any) => {
+const HomeScreen = ({navigation, setIsAuthenticated, setUser}: any) => {
 
     const webClientId = "481372623389-d29cdtqg73va5rrcqaokcp4qvo86jpm2.apps.googleusercontent.com"; 
 
@@ -24,7 +24,11 @@ const HomeScreen = ({navigation, setIsAuthenticated, setEmail}: any) => {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
             console.log("userinfo", userInfo);
-            setEmail(userInfo.user.email);
+            setUser({
+                name: userInfo.user.name,
+                email: userInfo.user.email,
+                image: userInfo.user.photo
+            });
             setIsAuthenticated(true);
         } catch (error: any) {
             console.log("error", error)            

@@ -57,6 +57,7 @@ const DiseaseHistory = ({email, resetkey}: {email: string, resetkey: number}) =>
     isLoading ? <ActivityIndicator size="large" color="#0000ff" /> : (
     diseaseHistory.length == 0 ? <Text style={styles.noHistory}>No History</Text> :
     <FlatList
+      style={{marginBottom:80}}
       data={diseaseHistory}
       keyExtractor={item => String(item.id)}
       renderItem={({ item }) => {
@@ -64,7 +65,7 @@ const DiseaseHistory = ({email, resetkey}: {email: string, resetkey: number}) =>
           <View style={styles.box}>
             <Image style={styles.image} source={{uri: 'data:image/png;base64,' + item.image}}/>
             <View style={styles.boxContent}>
-              <Text style={styles.title}>{item.result}</Text>
+              <Text style={styles.title}>{item.result ? item.result : 'No DIsease Detected'}</Text>
               <Text style={styles.description}>{item.timestamp}</Text>
             </View>
           </View>

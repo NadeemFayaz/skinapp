@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Avatar, Button, Card, Dialog, Icon, Text as PaperText } from 'react-native-paper';
+import { Avatar, Button, Card, Dialog, Icon, Text as PaperText, Paragraph } from 'react-native-paper';
 import DiseaseCard from './Components/Card';
 import TeamInfo, { TeamInfo as TeamInfoInterface } from './Components/TeamInfo';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -85,7 +85,19 @@ import {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native-gesture-handler';
 import { Alert } from 'react-native';
-function HomeScreen() {
+
+interface userData {
+  email: string;
+  image: string;
+  name: string;
+}
+
+interface recentData {
+  noOfUploads: number;
+  lastUpload: string;
+}
+
+function HomeScreen({ user }: { user: userData }) {
   const options = {
     mediaType: 'photo' as MediaType,
     includeBase64: false,
@@ -98,9 +110,7 @@ function HomeScreen() {
 
   const onStateChange = ({ open }: { open: boolean }) => setState({ open });
   const [diseaseData, setDiseaseData] = useState<Disease[]>([]);
-  
-
-  
+  const [recentData, setRecentData] = useState<recentData>({ noOfUploads: 0, lastUpload: '' });
 
   React.useEffect(() => {
     if (diseaseData.length !== 0) {
@@ -113,9 +123,22 @@ function HomeScreen() {
           const res = response.data;
           const data = res.Diseases;
           setDiseaseData(data);
+          axios.get('https://legal-rat-terminally.ngrok-free.app/userinfo', {
+            params: {
+              email: user.email,
+            },
+          }).then((response) => {
+            const res = response.data;
+            setRecentData({
+              noOfUploads: res.noOfUploads,
+              lastUpload: res.lastUpload,
+            });
+            ///
+          });
           setIsLoading(false); // Set loading to false after successful request
         })
         .catch((error) => {
+          console.log(error);
           setIsLoading(false); // Set loading to false even if request fails
         });
     }
@@ -129,17 +152,31 @@ function HomeScreen() {
   {isLoading ? (
     <ActivityIndicator size="large" color="#0000ff" />
   ) : (
-    <ScrollView horizontal={true} contentContainerStyle={{ flexDirection: 'row' }}>
-      {diseaseData.map((disease) => (
-        <DiseaseCard disease={disease} key={disease.id} />
-      ))}
-    </ScrollView>
+            <View>
+              <Card>
+                <Card.Content>
+                  <Image source={{ uri: user.image }} style={{ width: 100, height: 100, borderRadius: 50, alignSelf: 'center' }} />
+                  <Text style={{ fontSize: 20, textAlign: 'center', color: 'black' }}>User Info</Text>
+                  <Text style={{ fontSize: 15, textAlign: 'left', color: 'black' }}>Email: {user.email}</Text>
+                  <Text style={{ fontSize: 15, textAlign: 'left', color: 'black' }}>Name: {user.name}</Text>
+                  <Text style={{ fontSize: 15, textAlign: 'left', color: 'black' }}>No of Uploads: {recentData.noOfUploads}</Text>
+                  <Text style={{ fontSize: 15, textAlign: 'left', color: 'black' }}>Last Upload: {recentData.lastUpload}</Text>
+                  <View>
+                    <Button onPress={() => navigationRef.current?.navigate('blog')}>
+                      Read More
+                    </Button>
+                  </View>
+                </Card.Content>
+              </Card>
+              <ScrollView horizontal={true} contentContainerStyle={{ flexDirection: 'row' }}>
+                {diseaseData.map((disease) => (
+                  <DiseaseCard disease={disease} key={disease.id} />
+                ))}
+              </ScrollView>
+              
+            </View>
   )}
-  <ScrollView horizontal={true} contentContainerStyle={{ flexDirection: 'column',justifyContent:'center' }}>
-    {diseaseData.map((disease) => (
-      <DiseaseCard disease={disease} key={disease.id} />
-    ))}
-    </ScrollView>
+ 
 </ScrollView>
     </View>
   );
@@ -171,19 +208,13 @@ function App(): React.JSX.Element {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCameraModalVisible, setIsCameraModalVisible] = useState(false);
   const [visible, setVisible] = React.useState(false);
-  const [selectedImage, setSelectedImage] = React.useState<any>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const [email, setEmail] = useState('' as string);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [user, setUser] = useState<userData>();
   const [resetkey, setResetKey] = useState(0);
 
   const snapPoints = React.useMemo(() => ['25%', '30%'], []);
 
-  const handleAllergies = (selectedImage: any) => {
-    processImage(selectedImage, 'allergy');
-  }
-
-  const processImage = (image: any, type: string) => {
+  const processImage = (image: any) => {
     try {
       Resizer.createResizedImage(image.path ? image.path : image.uri, 300, 300, 'JPEG', 100, 0, null)
         .then((response) => {
@@ -193,20 +224,18 @@ function App(): React.JSX.Element {
             type: 'image/jpeg',
             name: 'image.jpg',
           });
-          data.append('email', email);
-          axios.post('https://legal-rat-terminally.ngrok-free.app/' + type, data, {
+          data.append('email', user?.email);
+          axios.post('https://legal-rat-terminally.ngrok-free.app/detect', data, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
           }).then((response) => {
             setIsLoading(false);
             if (response.data.error) {
-              setOpenDialog
               Alert.alert('Error', response.data.error);
               return;
             }
             navigationRef.current?.navigate('Disease Info', { data: response.data });
-            setOpenDialog(false);
             }).catch((error) => {
             setIsLoading(false);
             console.log(error);
@@ -222,8 +251,8 @@ function App(): React.JSX.Element {
     }
   }
 
-  const handleSkin = (selectedImage: any) => {
-    processImage(selectedImage, 'skin');
+  const handleDiseaseFunction = (selectedImage: any) => {
+    processImage(selectedImage);
   }
 
   const launchCameraFunction = () => {
@@ -233,18 +262,13 @@ function App(): React.JSX.Element {
       } else if (response.errorCode) {
         console.log('ImagePicker Error: ', response.errorMessage);
       } else {
-        setSelectedImage(response && response.assets ? response.assets[0] : null);
+        setIsLoading(true);
+        handleDiseaseFunction(response && response.assets ? response.assets[0] : null);
         bottomSheetModalRef.current?.dismiss();
-        setOpenDialog(true);
       }
     });
   };
 
-  useEffect(() => {
-    if (selectedImage) {
-      console.log(selectedImage);
-    }
-  }, [selectedImage]);
 
 
   const launchImagePickerFunction = () => {
@@ -253,10 +277,9 @@ function App(): React.JSX.Element {
       freeStyleCropEnabled: true,
     }).then(image => {
       try {
-        setSelectedImage(image);
+        setIsLoading(true);
+        handleDiseaseFunction(image);
         bottomSheetModalRef.current?.dismiss();
-        setOpenDialog(true);
-
       } catch (error) {
         throw new Error("Failed to process image")
       }
@@ -271,9 +294,13 @@ function App(): React.JSX.Element {
   return (
 
     <GestureHandlerRootView style={{ flex: 1 }}>
-      {!isAuthenticated ? <Auth setIsAuthenticated={setIsAuthenticated} setEmail={setEmail} />
+      {!isAuthenticated ? <Auth setIsAuthenticated={setIsAuthenticated} setUser={setUser} />
         : (
           <BottomSheetModalProvider>
+             <>
+              {isLoading && <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black', zIndex: 1000 }}>
+                <ActivityIndicator size="large" color="#0000ff" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} />
+              </View>}
             <SafeAreaProvider>
               <NavigationContainer ref={navigationRef}>
                 <Tab.Navigator
@@ -293,7 +320,7 @@ function App(): React.JSX.Element {
                 >
                   <Tab.Screen
                     name="HomeScreen"
-                    component={StackNavigator}
+                    children={() => <StackNavigator user={user} />}
                     options={{
                       tabBarShowLabel: false,
                       tabBarLabel: 'Home',
@@ -314,7 +341,7 @@ function App(): React.JSX.Element {
                   />
                   <Tab.Screen
                     name="blog"
-                    component={DummyComponent}
+                    component={BlogComponent}
                     options={{
                       tabBarIcon: ({ focused }) => (
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -373,7 +400,7 @@ function App(): React.JSX.Element {
                   <Tab.Screen
                     name="History"
                     children={() => {
-                      return <DiseaseHistory email={email} resetkey={resetkey} />;
+                      return <DiseaseHistory email={user?.email || ''} resetkey={resetkey} />;
                     }}
                     listeners={({ navigation }) => ({
                       focus: () => {
@@ -402,14 +429,8 @@ function App(): React.JSX.Element {
                 </Tab.Navigator>
                 
               </NavigationContainer>
-              <Dialog visible={openDialog} onDismiss={() => setOpenDialog(false)}>
-              <Dialog.Title>Choose an option below:</Dialog.Title>
-              <Dialog.Content>
-                <Button onPress={() => handleAllergies(selectedImage)}>Allergy Detection</Button>
-                <Button onPress={() => handleSkin(selectedImage)}>Cancer Detection</Button>
-              </Dialog.Content>
-            </Dialog>
             </SafeAreaProvider>
+            </>
             
             <BottomSheetModal
                   ref={bottomSheetModalRef}
@@ -472,6 +493,46 @@ const DummyComponent = () => {
   );
 };
 
+interface BlogData {
+  title: string;
+  content: string;
+}
+
+const BlogComponent = () => {
+  const [blogdata, setBlogData] = useState<BlogData[]>([]);
+
+  useEffect(() => {
+    if(blogdata.length === 0) {
+      axios.get('https://legal-rat-terminally.ngrok-free.app/blog')
+        .then((response) => {
+          const res = response.data;
+          setBlogData(res);
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [blogdata]);
+
+  return (
+    <View>
+      {blogdata.length === 0 ? <ActivityIndicator size="large" color="#0000ff" /> :
+      <ScrollView>
+        {blogdata.map((blog, index) => (
+          <Card key={index} style={{ margin: 10, width: '100%' }}>
+            <Card.Title title={blog.title} style={{ padding: 10 }} titleStyle={{ color: '#e32f45' }} />
+            <Card.Content>
+              <Paragraph style={{textAlign: 'justify'}}>{blog.content}</Paragraph>
+            </Card.Content>
+          </Card>
+        ))}
+      </ScrollView>
+}
+    </View>
+  );
+};
+
 
 
 // Modify the CustomTabBarButton to open the modal instead of navigating to a new screen
@@ -502,10 +563,10 @@ const CustomTabBarButtom = ({ children, onPress, setIsCameraModalVisible, bottom
   </TouchableOpacity>
 );
 
-function StackNavigator() {
+function StackNavigator({ user }: { user: userData }) {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Home" children={() => <HomeScreen user={user} />} />
       <Stack.Screen name="Doctor" component={Doctor} />
       <Stack.Screen name="Disease Info" component={Final} />
     </Stack.Navigator>
