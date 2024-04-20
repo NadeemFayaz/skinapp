@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Avatar, Button, Card, Text } from 'react-native-paper';
+import { Card, Text } from 'react-native-paper';
 
-// const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 export interface Disease {
     id: number;
     name: string;
@@ -10,15 +9,12 @@ export interface Disease {
 }
 
 const DiseaseCard = ({ disease }: { disease: Disease }) => (
-  <Card style={{margin: 10, justifyContent:'center'}}>
-     <Card.Cover source={{ uri: disease.image }} />
-    {/* <Card.Title title="Card Title" subtitle="Card Subtitle" left={LeftContent} /> */}
-    <Card.Content style={{margin:3,justifyContent:'center'}}>
-      <Text variant="titleLarge">{disease.name}</Text>
-      <Text variant="bodyMedium">{disease.description}</Text>
+  <Card style={{ margin: 6, width: 200 }}>
+    <Card.Cover source={{ uri: disease.image }} />
+    <Card.Content>
+      <Text variant="titleMedium">{disease.name}</Text>
+      <Text variant="bodySmall">{disease.description}</Text>
     </Card.Content>
-   
-    
   </Card>
 );
 

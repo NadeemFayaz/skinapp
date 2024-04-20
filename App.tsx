@@ -98,6 +98,9 @@ function HomeScreen() {
 
   const onStateChange = ({ open }: { open: boolean }) => setState({ open });
   const [diseaseData, setDiseaseData] = useState<Disease[]>([]);
+  
+
+  
 
   React.useEffect(() => {
     if (diseaseData.length !== 0) {
@@ -123,17 +126,21 @@ function HomeScreen() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <ScrollView>
-        <View style={{ width: '100%', height: 100, backgroundColor: 'violet', justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ color: 'black', fontSize: 20, justifyContent: 'center', textAlign: 'center' }}>Please use the plus icon at the bottom right corner to upload the image for diagonosis</Text>
-        </View>
-        {isLoading ? ( // Use isLoading to conditionally render
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          diseaseData.map((disease) => (
-            <DiseaseCard disease={disease} key={disease.id} />
-          ))
-        )}
-      </ScrollView>
+  {isLoading ? (
+    <ActivityIndicator size="large" color="#0000ff" />
+  ) : (
+    <ScrollView horizontal={true} contentContainerStyle={{ flexDirection: 'row' }}>
+      {diseaseData.map((disease) => (
+        <DiseaseCard disease={disease} key={disease.id} />
+      ))}
+    </ScrollView>
+  )}
+  <ScrollView horizontal={true} contentContainerStyle={{ flexDirection: 'column',justifyContent:'center' }}>
+    {diseaseData.map((disease) => (
+      <DiseaseCard disease={disease} key={disease.id} />
+    ))}
+    </ScrollView>
+</ScrollView>
     </View>
   );
 }
@@ -178,7 +185,7 @@ function App(): React.JSX.Element {
 
   const processImage = (image: any, type: string) => {
     try {
-      Resizer.createResizedImage(image.path ? image.path : image.uri, 200, 200, 'JPEG', 100, 0, null)
+      Resizer.createResizedImage(image.path ? image.path : image.uri, 300, 300, 'JPEG', 100, 0, null)
         .then((response) => {
           const data = new FormData();
           data.append('file', {
@@ -198,7 +205,6 @@ function App(): React.JSX.Element {
               Alert.alert('Error', response.data.error);
               return;
             }
-            console.log(response.data);
             navigationRef.current?.navigate('Disease Info', { data: response.data });
             setOpenDialog(false);
             }).catch((error) => {
@@ -505,6 +511,8 @@ function StackNavigator() {
     </Stack.Navigator>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   shadow: {

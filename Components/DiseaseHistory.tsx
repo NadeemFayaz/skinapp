@@ -78,31 +78,44 @@ const DiseaseHistory = ({email, resetkey}: {email: string, resetkey: number}) =>
 export default DiseaseHistory
 
 const styles = StyleSheet.create({
-  image: {
-    width: 100,
-    height: 100,
-  },
-  box: {
-    padding: 20,
-    marginTop: 5,
-    marginBottom: 5,
-    backgroundColor: 'white',
-    flexDirection: 'row',
-  },
-  boxContent: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginLeft: 10,
-  },
-  title: {
-    fontSize: 18,
-    color: '#151515',
-  },
-  description: {
-    fontSize: 15,
-    color: '#646464',
-  },
+    image: {
+      width: 170,
+      height: 190,
+      borderRadius: 10,
+      borderColor:'red',
+      borderWidth:2, // Add rounded corners to the image
+    },
+    box: {
+      padding: 20,
+      marginTop: 5,
+      marginBottom: 5,
+      backgroundColor: '#f8f8f8', // Change the background color to a light gray
+      flexDirection: 'row',
+      borderRadius: 10, // Add rounded corners to the card
+      shadowColor: "#000", // Add a shadow to the card
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+    },
+    boxContent: {
+      flex: 1,
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      marginLeft: 20,
+    },
+    title: {
+      fontSize: 18,
+      color: '#151515',
+      fontWeight: 'bold', // Make the title bold
+    },
+    description: {
+      fontSize: 15,
+      color: '#646464',
+    },
   buttons: {
     flexDirection: 'row',
   },
