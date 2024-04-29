@@ -28,7 +28,7 @@ const DiseaseHistory = ({email, resetkey}: {email: string, resetkey: number}) =>
   const [isLoading, setIsLoading] = useState(true)
   const getDiseaseHistory = async () => {
     try {
-      const hostUrl = process.env.REACT_APP_HOST_URL
+      const hostUrl = "https://seahorse-app-f2xuf.ondigitalocean.app"
       axios.get(hostUrl+'/history', {
         params: {
           email: email
@@ -53,7 +53,7 @@ const DiseaseHistory = ({email, resetkey}: {email: string, resetkey: number}) =>
   const deleteHistory = async (id: number) => {
     console.log(id)
     try {
-      const hostUrl = process.env.REACT_APP_HOST_URL
+      const hostUrl = "https://seahorse-app-f2xuf.ondigitalocean.app"
       axios.delete(hostUrl+'/history', {
         params: {
           id: id

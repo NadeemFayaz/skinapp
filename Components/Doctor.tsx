@@ -20,7 +20,7 @@ const Doctor = () => {
     const [doctors, setDoctors] = useState<Doctor[]>([]);
 
     useEffect(() => {
-        const hostUrl = process.env.REACT_APP_HOST_URL
+        const hostUrl = "https://seahorse-app-f2xuf.ondigitalocean.app"
         axios.get(hostUrl+'/doctors').then((response) => {
                 const res = response.data;
                 const data = res.Doctors;

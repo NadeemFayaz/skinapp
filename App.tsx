@@ -117,7 +117,7 @@ function HomeScreen({ user }: { user: userData }) {
       return;
     }
     const getDiseaseData = () => {
-      const hostUrl = process.env.REACT_APP_HOST_URL
+      const hostUrl = "https://seahorse-app-f2xuf.ondigitalocean.app"
       setIsLoading(true); // Set loading to true before request
       axios.get(hostUrl+'/diseases')
         .then((response) => {
@@ -226,7 +226,7 @@ function App(): React.JSX.Element {
             name: 'image.jpg',
           });
           data.append('email', user?.email);
-          const hostUrl = process.env.REACT_APP_HOST_URL
+          const hostUrl = "https://seahorse-app-f2xuf.ondigitalocean.app"
           axios.post(hostUrl+'/detect', data, {
             headers: {
               'Content-Type': 'multipart/form-data',
@@ -505,7 +505,7 @@ const BlogComponent = () => {
 
   useEffect(() => {
     if(blogdata.length === 0) {
-      const hostUrl = process.env.REACT_APP_HOST_URL
+      const hostUrl = "https://seahorse-app-f2xuf.ondigitalocean.app"
       axios.get(hostUrl+'/blog')
         .then((response) => {
           const res = response.data;
