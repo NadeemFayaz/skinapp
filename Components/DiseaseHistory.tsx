@@ -28,7 +28,8 @@ const DiseaseHistory = ({email, resetkey}: {email: string, resetkey: number}) =>
   const [isLoading, setIsLoading] = useState(true)
   const getDiseaseHistory = async () => {
     try {
-      axios.get('https://legal-rat-terminally.ngrok-free.app/history', {
+      const hostUrl = process.env.REACT_APP_HOST_URL
+      axios.get(hostUrl+'/history', {
         params: {
           email: email
         }
@@ -52,8 +53,8 @@ const DiseaseHistory = ({email, resetkey}: {email: string, resetkey: number}) =>
   const deleteHistory = async (id: number) => {
     console.log(id)
     try {
-      const hostUrl = 
-      axios.delete('https://legal-rat-terminally.ngrok-free.app/history', {
+      const hostUrl = process.env.REACT_APP_HOST_URL
+      axios.delete(hostUrl+'/history', {
         params: {
           id: id
         }

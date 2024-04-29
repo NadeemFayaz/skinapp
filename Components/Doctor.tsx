@@ -20,7 +20,8 @@ const Doctor = () => {
     const [doctors, setDoctors] = useState<Doctor[]>([]);
 
     useEffect(() => {
-        axios.get('https://legal-rat-terminally.ngrok-free.app/doctors').then((response) => {
+        const hostUrl = process.env.REACT_APP_HOST_URL
+        axios.get(hostUrl+'/doctors').then((response) => {
                 const res = response.data;
                 const data = res.Doctors;
                 setDoctors(data);

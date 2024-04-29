@@ -117,13 +117,14 @@ function HomeScreen({ user }: { user: userData }) {
       return;
     }
     const getDiseaseData = () => {
+      const hostUrl = process.env.REACT_APP_HOST_URL
       setIsLoading(true); // Set loading to true before request
-      axios.get('https://legal-rat-terminally.ngrok-free.app/diseases')
+      axios.get(hostUrl+'/diseases')
         .then((response) => {
           const res = response.data;
           const data = res.Diseases;
           setDiseaseData(data);
-          axios.get('https://legal-rat-terminally.ngrok-free.app/userinfo', {
+          axios.get(hostUrl+'/userinfo', {
             params: {
               email: user.email,
             },
@@ -225,7 +226,8 @@ function App(): React.JSX.Element {
             name: 'image.jpg',
           });
           data.append('email', user?.email);
-          axios.post('https://legal-rat-terminally.ngrok-free.app/detect', data, {
+          const hostUrl = process.env.REACT_APP_HOST_URL
+          axios.post(hostUrl+'/detect', data, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
@@ -503,7 +505,8 @@ const BlogComponent = () => {
 
   useEffect(() => {
     if(blogdata.length === 0) {
-      axios.get('https://legal-rat-terminally.ngrok-free.app/blog')
+      const hostUrl = process.env.REACT_APP_HOST_URL
+      axios.get(hostUrl+'/blog')
         .then((response) => {
           const res = response.data;
           setBlogData(res);
