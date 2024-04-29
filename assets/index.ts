@@ -14,3 +14,4 @@ export const HOME = require('./home.png');
 export const INFO = require('./info.png');
 export const HISTORY = require('./history.png');
 export const BLOG = require('./blog.png');
+export const DELETE = require('./delete.png');

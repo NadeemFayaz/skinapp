@@ -11,6 +11,9 @@ import {
   Linking,
   ActivityIndicator
 } from 'react-native'
+import { Button } from 'react-native-paper';
+
+import { DELETE } from '../assets';
 
 interface DiseaseHistory {
     id: number;
@@ -45,6 +48,29 @@ const DiseaseHistory = ({email, resetkey}: {email: string, resetkey: number}) =>
     }
   }
 
+
+  const deleteHistory = async (id: number) => {
+    console.log(id)
+    try {
+      const hostUrl = 
+      axios.delete('https://legal-rat-terminally.ngrok-free.app/history', {
+        params: {
+          id: id
+        }
+      })
+        .then((response) => {
+          console.log(response.data)
+            setDiseaseHistory(diseaseHistory.filter(item => item.id !== id))
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+
+    } catch (error) {
+        console.error(error)
+    }
+  }
+
   useEffect(() => {
     getDiseaseHistory()
   }, [resetkey])
@@ -67,7 +93,16 @@ const DiseaseHistory = ({email, resetkey}: {email: string, resetkey: number}) =>
             <View style={styles.boxContent}>
               <Text style={styles.title}>{item.result ? item.result : 'No DIsease Detected'}</Text>
               <Text style={styles.description}>{item.timestamp}</Text>
+              <TouchableOpacity
+                  style={[styles.button]}
+                  onPress={() => deleteHistory(item.id)}>
+                  <Image
+                    style={styles.icon}
+                    source={DELETE}
+                  />
+                </TouchableOpacity>
             </View>
+            
           </View>
         )
       }}
@@ -129,6 +164,7 @@ const styles = StyleSheet.create({
     width: 50,
     marginRight: 5,
     marginTop: 5,
+    backgroundColor: 'red',
   },
   icon: {
     width: 20,
